@@ -76,7 +76,7 @@ function writeConfig() {
       source: "onboard",
     },
     database: {
-      mode: "postgres",
+      provider: "postgres",
       connectionString: process.env.DATABASE_URL,
     },
     logging: {
@@ -85,7 +85,7 @@ function writeConfig() {
     },
     server: {
       deploymentMode: process.env.PAPERCLIP_DEPLOYMENT_MODE || "authenticated",
-      exposure: process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE || "public",
+      deploymentExposure: process.env.PAPERCLIP_DEPLOYMENT_EXPOSURE || "public",
       allowedHostnames: (process.env.PAPERCLIP_ALLOWED_HOSTNAMES || "")
         .split(",").map(h => h.trim()).filter(Boolean),
       port: PAPERCLIP_PORT,
@@ -98,9 +98,7 @@ function writeConfig() {
     },
     storage: {
       provider: "local_disk",
-      localDisk: {
-        baseDir: join(HOME, "storage"),
-      },
+      localDiskPath: join(HOME, "storage"),
     },
     secrets: {
       provider: "local_encrypted",
