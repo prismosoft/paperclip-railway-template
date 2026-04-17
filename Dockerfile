@@ -4,6 +4,7 @@ FROM node:20-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gosu \
     ca-certificates \
+ && update-ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user (required: Claude CLI refuses --dangerously-skip-permissions as root)
@@ -21,7 +22,7 @@ RUN npm install --omit=dev
 # Make locally installed CLI binaries (codex, claude, gemini, opencode, etc.) available on PATH
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
-# Ensure TLS clients can find the system CA bundle
+# Ensure native TLS clients can find the CA bundle
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 # Copy application code
