@@ -15,6 +15,9 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install --omit=dev
 
+# Make locally installed CLI binaries (codex, claude, etc.) available on PATH
+ENV PATH="/app/node_modules/.bin:${PATH}"
+
 # Copy application code
 COPY . .
 
