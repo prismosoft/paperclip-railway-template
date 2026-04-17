@@ -1,7 +1,10 @@
 FROM node:20-slim
 
 # Install gosu for privilege dropping in entrypoint
-RUN apt-get update && apt-get install -y --no-install-recommends gosu && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gosu \
+    ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user (required: Claude CLI refuses --dangerously-skip-permissions as root)
 RUN groupadd -r paperclip && useradd -r -g paperclip -m -d /home/paperclip -s /bin/bash paperclip
@@ -15,8 +18,11 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install --omit=dev
 
-# Make locally installed CLI binaries (codex, claude, etc.) available on PATH
+# Make locally installed CLI binaries (codex, claude, gemini, opencode, etc.) available on PATH
 ENV PATH="/app/node_modules/.bin:${PATH}"
+
+# Ensure TLS clients can find the system CA bundle
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 # Copy application code
 COPY . .
